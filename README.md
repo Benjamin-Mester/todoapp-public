@@ -1,59 +1,77 @@
-# Todoapp
+# TodoApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
+A modern task management application built with **Angular, TypeScript, and PrimeNG**.
 
-## Development server
+## 🌐 Live Demo
 
-To start a local development server, run:
+Try the application directly in your browser:
 
-```bash
-ng serve
-```
+**[Launch TodoApp](https://benjamin-mester.github.io/todoapp-public/)**
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ✨ Features
 
-## Code scaffolding
+- Create, edit, and delete tasks
+- Assign tasks to users
+- Set task priorities and due dates
+- Track task status (Pending, In Progress, Completed)
+- Mark tasks as completed and reopen them
+- Delete multiple tasks with confirmation
+- Validate required fields and email addresses
+- Switch between light and dark mode
+- Save tasks automatically using browser LocalStorage
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠️ Technologies
 
-```bash
-ng generate component component-name
-```
+- Angular
+- TypeScript
+- PrimeNG
+- Angular Reactive Forms
+- Angular Signals
+- Angular Router
+- HTML and CSS
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 💻 Run Locally
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Clone the repository:
 
 ```bash
-ng test
+git clone https://github.com/Benjamin-Mester/todoapp-public.git
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Navigate into the project directory:
 
 ```bash
-ng e2e
+cd todoapp-public
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Install dependencies:
 
-## Additional Resources
+```bash
+npm install
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Start the development server:
+
+```bash
+npm start
+```
+
+Open `http://localhost:4200/` in your browser.
+
+## 💾 Data Storage
+
+Tasks are stored locally in your browser using LocalStorage.
+
+No account or external database is required. Task data is not automatically synchronized between browsers or devices.
+
+## 📦 Releases
+
+The first public release is **v1.0.0**.
+
+Visit the [Releases page](https://github.com/Benjamin-Mester/todoapp-public/releases) for published versions.
+
+## 🚀 Future Development
+
+This project is continuously evolving as part of my Angular and TypeScript learning journey.
+
+Additional features and improvements are planned for future releases.
