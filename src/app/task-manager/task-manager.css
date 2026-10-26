@@ -1,0 +1,105 @@
+/* ============================================================
+   THEME CONTAINER
+   ============================================================ */
+
+.task-manager-page {
+  min-height: 100vh;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
+
+.task-manager-page.light-mode {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+.task-manager-page.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+
+/* ============================================================
+   DARK MODE - PRIME NG CARD
+   ============================================================ */
+
+.task-manager-page.dark-mode ::ng-deep .p-card {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+
+/* ============================================================
+   DARK MODE - TABLE
+   ============================================================ */
+
+.task-manager-page.dark-mode ::ng-deep .p-datatable {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+
+.task-manager-page.dark-mode ::ng-deep .p-datatable-thead > tr > th {
+  background-color: #262626;
+  color: #f5f5f5;
+}
+
+
+.task-manager-page.dark-mode ::ng-deep .p-datatable-tbody > tr {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+
+.task-manager-page.dark-mode ::ng-deep .p-datatable-tbody > tr > td {
+  color: #f5f5f5;
+}
+
+/* ============================================================
+   DARK MODE - PRIME NG SELECT
+   Priority / Assign to
+   ============================================================ */
+
+.task-manager-page.dark-mode ::ng-deep .p-select {
+  background-color: #262626;
+  color: #f5f5f5;
+  border-color: #555555;
+}
+
+.task-manager-page.dark-mode ::ng-deep .p-select-label {
+  color: #f5f5f5;
+}
+
+.task-manager-page.dark-mode ::ng-deep .p-select-dropdown {
+  color: #f5f5f5;
+}
+
+/* ============================================================
+   DARK MODE - INPUTS
+   ============================================================ */
+
+.task-manager-page.dark-mode ::ng-deep input,
+.task-manager-page.dark-mode ::ng-deep textarea {
+  background-color: #262626;
+  color: #f5f5f5;
+  border-color: #555555;
+}
+
+/* Completed Tasks: Cross out all data fields */
+
+tr.task-completed > td:not(:first-child):not(:last-child) {
+  text-decoration: line-through;
+  color: #888;
+}

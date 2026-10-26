@@ -1,0 +1,757 @@
+<p-toast></p-toast>
+
+<p-confirmDialog></p-confirmDialog>
+
+
+<div
+  class="task-manager-page p-4"
+  [class.dark-mode]="theme() === 'dark'"
+  [class.light-mode]="theme() === 'light'"
+>
+
+  <p-card header="Task Manager">
+
+<div class="mb-4">
+
+  <p-button
+    [label]="themeLabel()"
+    [icon]="themeIcon()"
+    severity="secondary"
+    (onClick)="toggleTheme()">
+  </p-button>
+
+</div>
+
+    <!-- =========================================================
+         ROUTE INFORMATION
+         ========================================================= -->
+    @if (selectedTaskId !== null) {
+
+      <div class="mb-4">
+
+        Current Task-ID from the URL:
+
+        <strong>
+          {{ selectedTaskId }}
+        </strong>
+
+      </div>
+
+    }
+
+
+    <!-- =========================================================
+         CREATE TASK FORM
+         ========================================================= -->
+    <form
+      [formGroup]="taskForm"
+      (ngSubmit)="addTask()"
+    >
+
+      <div class="grid gap-4 mb-6">
+
+
+        <!-- =====================================================
+             TASK TITLE
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskTitle"
+            class="block mb-2 font-semibold"
+          >
+            Task title
+          </label>
+
+
+          <input
+            id="taskTitle"
+            pInputText
+            formControlName="title"
+            placeholder="Enter Task title"
+            class="w-full"
+          />
+
+
+          @if (
+            taskForm.controls.title.hasError('required') &&
+            taskForm.controls.title.touched
+          ) {
+
+            <small class="text-red-500">
+
+              Task title ist erforderlich.
+
+            </small>
+
+          }
+
+        </div>
+
+
+        <!-- =====================================================
+             DESCRIPTION
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskDescription"
+            class="block mb-2 font-semibold"
+          >
+            Description
+          </label>
+
+
+          <textarea
+            id="taskDescription"
+            pTextarea
+            formControlName="description"
+            placeholder="Enter description"
+            rows="3"
+            class="w-full">
+          </textarea>
+
+        </div>
+
+
+        <!-- =====================================================
+             EMAIL
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskEmail"
+            class="block mb-2 font-semibold"
+          >
+            E-Mail
+          </label>
+
+
+          <input
+            id="taskEmail"
+            pInputText
+            type="email"
+            formControlName="email"
+            placeholder="Enter email address"
+            class="w-full"
+          />
+
+
+          <!-- Pflichtfeld -->
+          @if (
+            taskForm.controls.email.hasError('required') &&
+            taskForm.controls.email.touched
+          ) {
+
+            <small class="block text-red-500 mt-1">
+
+              Email address is neccessary.
+
+            </small>
+
+          }
+
+
+          <!-- Regex-Regel -->
+          @if (
+            taskForm.controls.email.hasError('pattern') &&
+            taskForm.controls.email.touched
+          ) {
+
+            <small class="block text-red-500 mt-1">
+
+              Please enter a valid email address.
+
+            </small>
+
+          }
+
+        </div>
+
+
+        <!-- =====================================================
+             PRIORITY
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskPriority"
+            class="block mb-2 font-semibold"
+          >
+            Priority
+          </label>
+
+
+          <p-select
+            inputId="taskPriority"
+            formControlName="priority"
+            [options]="priorityOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            class="w-full">
+          </p-select>
+
+        </div>
+
+
+        <!-- =====================================================
+             ASSIGN TO
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskAssignedTo"
+            class="block mb-2 font-semibold"
+          >
+            Assign to
+          </label>
+
+
+          <p-select
+            inputId="taskAssignedTo"
+            formControlName="assignedTo"
+            [options]="users"
+            optionLabel="name"
+            placeholder="Select user"
+            [showClear]="true"
+            appendTo="body"
+            class="w-full">
+          </p-select>
+
+        </div>
+
+        <!-- =====================================================
+             Task From
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskFrom"
+            class="block mb-2 font-semibold"
+          >
+            Task from
+          </label>
+
+
+          <p-select
+            inputId="taskFrom"
+            formControlName="taskFrom"
+            [options]="colleagues"
+            optionLabel="name"
+            placeholder="Select client"
+            [showClear]="true"
+            appendTo="body"
+            class="w-full">
+          </p-select>
+
+        </div>
+
+        <!-- =====================================================
+             DUE DATE
+             ===================================================== -->
+        <div>
+
+          <label
+            for="taskDueDate"
+            class="block mb-2 font-semibold"
+          >
+            Due date
+          </label>
+
+
+          <p-datepicker
+            inputId="taskDueDate"
+            formControlName="dueDate"
+            dateFormat="dd.mm.yy"
+            [showIcon]="true"
+            [showClear]="true"
+            placeholder="Select date"
+            appendTo="body"
+            class="w-full">
+          </p-datepicker>
+
+        </div>
+
+
+        <!-- =====================================================
+             ADD TASK
+             ===================================================== -->
+        <div>
+
+          <p-button
+            type="submit"
+            label="Add Task"
+            icon="pi pi-plus">
+          </p-button>
+
+        </div>
+
+
+      </div>
+
+    </form>
+
+
+    <!-- =========================================================
+         TASK TABLE
+         ========================================================= -->
+    <p-table
+      [value]="tasks"
+      [tableStyle]="{
+        'min-width': '86rem'
+      }"
+    >
+
+
+      <!-- =======================================================
+           TABLE HEADER
+           ======================================================= -->
+      <ng-template pTemplate="header">
+
+        <tr>
+
+          <th></th>
+
+          <th>
+            Task title
+          </th>
+
+          <th>
+            Description
+          </th>
+
+          <th>
+            E-Mail
+          </th>
+
+          <th>
+            Priority
+          </th>
+
+          <th>
+            Assign to
+          </th>
+          
+          <th>
+            Task from
+          </th>
+
+          <th>
+            Due date
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Actions
+          </th>
+
+        </tr>
+
+      </ng-template>
+
+
+      <!-- =======================================================
+           TABLE BODY
+           ======================================================= -->
+      <ng-template
+        pTemplate="body"
+        let-task
+      >
+
+<!-- cross everything out when completed -->
+        <tr
+  [class.task-completed]="
+    task.status === TaskStatus.Completed &&
+    editingTaskId !== task.id
+  "
+>
+
+
+          <!-- ===================================================
+               BULK DELETE SELECTION
+               =================================================== -->
+          <td>
+
+            <p-checkbox
+              [binary]="true"
+              [formControl]="getSelectionControl(task.id)">
+            </p-checkbox>
+
+          </td>
+
+
+          <!-- ===================================================
+               TASK TITLE
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              <span
+                [ngClass]="{
+                  'line-through text-gray-500':
+                    task.status === TaskStatus.Completed
+                }"
+              >
+                {{ task.name }}
+              </span>
+
+            } @else {
+
+              <div>
+
+                <input
+                  pInputText
+                  [formControl]="editForm.controls.title"
+                  class="w-full"
+                />
+
+
+                @if (
+                  editForm.controls.title.hasError('required') &&
+                  editForm.controls.title.touched
+                ) {
+
+                  <small class="block text-red-500 mt-1">
+
+                    Task title is neccessary.
+
+                  </small>
+
+                }
+
+              </div>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               DESCRIPTION
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.description }}
+
+            } @else {
+
+              <textarea
+                pTextarea
+                [formControl]="editForm.controls.description"
+                rows="1"
+                class="w-full">
+              </textarea>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               EMAIL
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.email }}
+
+            } @else {
+
+              <div>
+
+                <input
+                  pInputText
+                  type="email"
+                  [formControl]="editForm.controls.email"
+                  class="w-full"
+                />
+
+
+                @if (
+                  editForm.controls.email.hasError('required') &&
+                  editForm.controls.email.touched
+                ) {
+
+                  <small class="block text-red-500 mt-1">
+
+                    Email address is neccessary.
+
+                  </small>
+
+                }
+
+
+                @if (
+                  editForm.controls.email.hasError('pattern') &&
+                  editForm.controls.email.touched
+                ) {
+
+                  <small class="block text-red-500 mt-1">
+
+                    Please enter a valid email address.
+
+                  </small>
+
+                }
+
+              </div>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               PRIORITY
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.priority }}
+
+            } @else {
+
+              <p-select
+                [formControl]="editForm.controls.priority"
+                [options]="priorityOptions"
+                optionLabel="label"
+                optionValue="value"
+                appendTo="body"
+                class="w-full">
+              </p-select>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               ASSIGN TO
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.assignedTo?.name || '-' }}
+
+            } @else {
+
+              <p-select
+                [formControl]="editForm.controls.assignedTo"
+                [options]="users"
+                optionLabel="name"
+                placeholder="Select user"
+                [showClear]="true"
+                appendTo="body"
+                class="w-full">
+              </p-select>
+
+            }
+
+          </td>
+
+          <!-- ===================================================
+               Task From
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.taskFrom?.name || '-' }}
+
+            } @else {
+
+              <p-select
+                [formControl]="editForm.controls.taskFrom"
+                [options]="colleagues"
+                optionLabel="name"
+                placeholder="Select client"
+                [showClear]="true"
+                appendTo="body"
+                class="w-full">
+              </p-select>
+
+            }
+
+          </td>
+
+          <!-- ===================================================
+               DUE DATE
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              @if (task.dueDate) {
+
+                {{ task.dueDate | date:'dd.MM.yyyy' }}
+
+              } @else {
+
+                -
+
+              }
+
+            } @else {
+
+              <p-datepicker
+                [formControl]="editForm.controls.dueDate"
+                dateFormat="dd.mm.yy"
+                [showIcon]="true"
+                [showClear]="true"
+                placeholder="Select date"
+                appendTo="body"
+                class="w-full">
+              </p-datepicker>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               STATUS
+               =================================================== -->
+          <td>
+
+            @if (editingTaskId !== task.id) {
+
+              {{ task.status }}
+
+            } @else {
+
+              <p-select
+                [formControl]="editForm.controls.status"
+                [options]="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                appendTo="body"
+                class="w-full">
+              </p-select>
+
+            }
+
+          </td>
+
+
+          <!-- ===================================================
+               ACTIONS
+               =================================================== -->
+          <td>
+
+            <div class="flex gap-2">
+
+
+              @if (editingTaskId !== task.id) {
+
+
+                <p-button
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="startEdit(task.id)">
+                </p-button>
+
+
+                <p-button
+
+                  [label]="
+                    task.status === TaskStatus.Completed
+                      ? 'Reopen'
+                      : 'Completed'
+                  "
+
+                  [icon]="
+                    task.status === TaskStatus.Completed
+                      ? 'pi pi-undo'
+                      : 'pi pi-check'
+                  "
+
+                  [severity]="
+                    task.status === TaskStatus.Completed
+                      ? 'secondary'
+                      : 'success'
+                  "
+
+                  size="small"
+
+                  (onClick)="toggleTask(task.id)">
+
+                </p-button>
+
+
+                <p-button
+                  label="Delete"
+                  icon="pi pi-trash"
+                  severity="danger"
+                  size="small"
+                  (onClick)="deleteTask(task.id)">
+                </p-button>
+
+
+              } @else {
+
+
+                <p-button
+                  label="Save"
+                  icon="pi pi-check"
+                  severity="success"
+                  size="small"
+                  (onClick)="saveEdit(task.id)">
+                </p-button>
+
+
+                <p-button
+                  label="Cancel"
+                  icon="pi pi-times"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="cancelEdit()">
+                </p-button>
+
+
+              }
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+
+      <!-- =======================================================
+           EMPTY TABLE
+           ======================================================= -->
+      <ng-template pTemplate="emptymessage">
+
+        <tr>
+
+          <td colspan="9">
+
+            No tasks available yet.
+
+          </td>
+
+        </tr>
+
+      </ng-template>
+
+
+    </p-table>
+
+
+  </p-card>
+
+</div>
